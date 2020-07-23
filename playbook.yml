@@ -1,0 +1,31 @@
+-hosts: server
+ vars:
+ - image: mulyono/cicd-jenkins:beta
+ - phyton: phyton-docker
+ tasks:
+ - name: install phyton docker centos
+   yum:
+     name: "{{ phyton }}"
+     state: present
+   when:
+   - ansible_distribution== "CentOS"
+ - name: install phyton docker ubuntu
+   yum:
+     name: "{{ phyton }}"
+     state: present
+   when:
+   - ansible_distribution== "Ubuntu"
+ - name: pull images dari docker hub
+   docker_image:
+     name: "{{ image }}"
+     state: present
+     force: yes
+ - name:creator container
+   docker_container:
+     name: container_docker_jenkins
+     image: "{{ image }}"
+     state: present
+     published_ports:
+     - 8090:80
+     recreate: yes
+ 
