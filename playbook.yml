@@ -1,31 +1,42 @@
--hosts: server
- vars:
- - image: mulyonoaja/cicd-jenkins:beta
- - phyton: phyton-docker
- tasks:
- - name: install phyton docker centos
-   yum:
-     name: "{{ phyton }}"
-     state: present
-   when:
-   - ansible_distribution== "CentOS"
- - name: install phyton docker ubuntu
+- hosts: server
+  vars:
+  - image: mulyonoaja/cicd-jenkins:beta
+  - python: python-docker
+  tasks:
+  - name: install python docker centos
+    yum:
+      name: "{{ python }}"
+      state: present
+    when:
+    - ansible_distribution == "CentOS"
+ - name: install python docker ubuntu
    apt:
-     name: "{{ phyton }}"
-     state: present
-   when:
-   - ansible_distribution== "Ubuntu"
- - name: pull images dari docker hub
-   docker_image:
-     name: "{{ image }}"
-     state: present
-     force: yes
- - name:creator container
-   docker_container:
-     name: container_docker_jenkins
-     image: "{{ image }}"
-     state: present
-     published_ports:
-     - 8090:80
-     recreate: yes
- 
+      name: python-pip
+      state: present
+    when: 
+    - ansible_distribution == "Ubuntu"
+  - name: uninstall python-docker
+    apt:
+      name: python-docker
+      state: absent
+    when: 
+    - ansible_distribution == "Ubuntu"
+  - name: install docker-py
+    pip:
+      name: docker-py
+      state: present
+    when:
+    - ansible_distribution == "Ubuntu"
+  - name: pull images dari docker hub
+    docker_image:
+      name: "{{ image }}"
+      state: present
+      force: yes
+  - name: create container 
+    docker_container:
+      name: container_docker_jenkins
+      image: "{{ image }}"
+      state: started
+      published_ports: 
+      - 8090:80
+      recreate: yes
