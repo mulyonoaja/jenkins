@@ -1,1 +1,1 @@
-echo "<h1>ok</h2>" > index.html
+echo "<h1><a href=ok.php>ok</a></h2>" > index.html
