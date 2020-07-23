@@ -1,6 +1,6 @@
 -hosts: server
  vars:
- - image: mulyono/cicd-jenkins:beta
+ - image: mulyonoaja/cicd-jenkins:beta
  - phyton: phyton-docker
  tasks:
  - name: install phyton docker centos
